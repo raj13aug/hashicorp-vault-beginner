@@ -1,32 +1,45 @@
+export VAULT_ADDR='http://vault.robofarming.link'
+export VAULT_TOKEN=hvs.0NmGFfRcz63EpVpyXQZOswmn
+
+
+#Enabling the secret engine
+
+vault secrets enable -path=kv kv
+# add multiple keys in a single command 
+vault kv put secret/data/mysql username=root password=root
+
+
+##############################################################
+
 # create policies and respective tokens
 vim secret-user-policy.hcl
 path "secret/data/*" {  capabilities = ["read"] }
 
 vim secret-admin-policy.hcl
-path "secret/data/*" {  capabilities = ["read", "create", "update"] }
+
 
 # command to write policy
 vault policy write secret-user-policy secret-user-policy.hcl
-vault policy write secret-admin-policy secret-admin-policy.hcl
+
 
 # read policy
 vault policy read secret-user-policy
-vault policy read secret-admin-policy
+
 
 # list policies
 vault policy list
 
 # create token
 vault token create -format=json -policy="secret-user-policy"
-vault token create -format=json -policy="secret-admin-policy"
-#
 
+############### login secret user policy #################
 
 #Testing the policies
 
 export VAULT_ADDR='http://vault.robofarming.link'
-export VAULT_TOKEN='s.hfAJfADfj...'
+export VAULT_TOKEN=xxaxxxxx
 
 
 vault login # enter repective tokens
 vault token lookup # to view current logged in token information
+vault kv get secret/data/mysql
